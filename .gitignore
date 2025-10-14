@@ -1,0 +1,17 @@
+data/
+
+__pycache__/
+*.pyc
+.venv/
+
+.DS_Store
+*.log
+
+*.h5
+*.pt
+*.npy
+*.npz
+
+
+output/
+
