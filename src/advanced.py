@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from pandas import merge
 
 # import basic_analysis as ba
 
@@ -34,6 +33,17 @@ def hourly_average_steps(df):
     merged['hourly_avg_steps'] = (merged['total_steps'] / merged['recorded_hours']).round().astype('Int64')
     return merged
 
+def normalize_data(df, min_hours=12):
+    # Keep only rows with sufficient recorded hours
+    df = df[df['recorded_hours'] >= min_hours].copy()
+    # Normalize to a 24-hour day based on hourly average steps
+    df['total_steps_normalized'] = (df['hourly_avg_steps'] * 24).astype('float').round(2)
+    return df
+
+def drop_duplicates(df):
+    df = df.drop_duplicates(subset=['fitmri_id', 'measured_date'])
+    return df
+
 def is_weekend(df):
     df['measured_date'] = pd.to_datetime(df['measured_date'], errors='coerce')
     df['weekend'] = df['measured_date'].dt.day_name()
@@ -60,14 +70,20 @@ def main():
     df = load_csv()
     summarize_data(df)
     hourly_avg_df = hourly_average_steps(df)
+    hourly_avg_df = drop_duplicates(hourly_avg_df)
+    normalized_df = normalize_data(hourly_avg_df, min_hours=12)
     weekend_df = is_weekend(df)
 
-    hourly_avg_df['measured_date'] = pd.to_datetime(hourly_avg_df['measured_date'], errors='coerce')
+    # Ensure date types are consistent
+    normalized_df['measured_date'] = pd.to_datetime(normalized_df['measured_date'], errors='coerce')
     weekend_df['measured_date'] = pd.to_datetime(weekend_df['measured_date'], errors='coerce')
 
-    fianl_df = pd.merge(hourly_avg_df, weekend_df[['fitmri_id', 'measured_date', 'is_weekend_or_not']], on=['fitmri_id', 'measured_date'], how ='left')
+    # Keep only one row per (fitmri_id, measured_date) for weekend info to avoid many-to-many merge duplication
+    weekend_unique = weekend_df[['fitmri_id', 'measured_date', 'is_weekend_or_not']].drop_duplicates(subset=['fitmri_id', 'measured_date'])
 
-    save_results(fianl_df)
+    final_df = pd.merge(normalized_df, weekend_unique, on=['fitmri_id', 'measured_date'], how='left')
+
+    save_results(final_df)
     print('Final_df is done')
 
 if __name__ == '__main__':

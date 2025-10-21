@@ -23,11 +23,11 @@ def one_patient_plot(df, patient_id):
 
     plt.figure(figsize=(20, 5))
     patient_data = df[df['fitmri_id'] == patient_id]
-    plt.plot(patient_data['measured_date'], patient_data['hourly_avg_steps'])
+    plt.plot(patient_data['measured_date'], patient_data['total_steps_normalized'])
 
-    plt.title('Hourly Average Steps, ' + 'Patient ID:' + str(patient_id))
+    plt.title('Total steps normalized, ' + 'Patient ID:' + str(patient_id))
     plt.xlabel('Date')
-    plt.ylabel('Hourly Average Steps')
+    plt.ylabel('Total steps normalized')
     plt.grid(True)
     #plt.tight_layout()
     plt.show()
