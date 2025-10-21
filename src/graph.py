@@ -32,5 +32,5 @@ def one_patient_plot(df, patient_id):
     #plt.tight_layout()
     plt.show()
 
-one_patient_plot(df, patient_id = 20)   ### guys, select your patient id here :) hehehe
+one_patient_plot(df, patient_id = 1)   ### guys, select your patient id here :)
 ## Just remember, there are Missing IDs: [6, 7, 11, 14, 16, 21] and IDs go from 1 to 26.
