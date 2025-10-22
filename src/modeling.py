@@ -88,6 +88,8 @@ def train_model(train_loader, test_loader):
     df = pd.DataFrame(history, columns=["epoch", "loss", "accuracy"])
     df.to_csv('result/history.csv', index=False)
 
+    torch.save(model.state_dict(), "result/model.pt")
+    print(" Model weights saved to result/model.pt")
     return df
 
 def main():

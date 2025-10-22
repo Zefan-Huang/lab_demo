@@ -33,7 +33,7 @@ def making_label(df, window, threshold):
             mean_past = np.mean(past)
             mean_future = np.mean(future)
             rate = (mean_future - mean_past) / mean_past
-            if rate < threshold:
+            if rate < -threshold:
                 label = 0
             elif rate > threshold:
                 label = 1
@@ -62,8 +62,8 @@ def main():
     train_df, test_df = split_data(df, 0.8)   # <------ if anyone wants to change the dataset ratio.
     save_data(train_df, test_df)
 
-    x_train, y_train = making_label(train_df, 30,0.14)  # <------needs to be refined in the future. The relationship between the threshold and rate.
-    x_test, y_test = making_label(test_df, 30,0.14)     # <------train and test, these two must be aligned.
+    x_train, y_train = making_label(train_df, 30,0.1)  # <------needs to be refined in the future. The relationship between the threshold and rate.
+    x_test, y_test = making_label(test_df, 30,0.1)     # <------train and test, these two must be aligned.
     save_x_y(x_train, y_train, x_test, y_test)
 
 if __name__ == '__main__':
