@@ -83,7 +83,7 @@ def main():
     f1 = metrics['f1']
     roc = roc_auc_score(y_true, probs)
 
-    df = pd.DataFrame([{'Precision': precision, 'Recall': recall, 'F1': f1, 'ROC': roc}])
+    df = pd.DataFrame([{'Precision': round(precision, 2), 'Recall': round(recall,2), 'F1': round(f1,2), 'ROC': round(roc,2)}])
     df.to_csv('result/precision_recall_f1_score.csv', index=False)
 
 if __name__ == '__main__':
