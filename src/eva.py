@@ -78,10 +78,12 @@ def main():
 
     plot_roc(y_true, probs)
 
-    precision = matrix['precision']
-    recall = matrix['recall']
-    f1 = matrix['f1']
-    df = pd.DataFrame([{'Precision': precision, 'Recall': recall, 'F1': f1, 'ROC': roc_auc_score(y_true, probs)}])
+    precision = metrics['precision']
+    recall = metrics['recall']
+    f1 = metrics['f1']
+    roc = roc_auc_score(y_true, probs)
+
+    df = pd.DataFrame([{'Precision': precision, 'Recall': recall, 'F1': f1, 'ROC': roc}])
     df.to_csv('result/precision_recall_f1_score.csv', index=False)
 
 if __name__ == '__main__':
