@@ -1,2 +1,2 @@
-Precision,Recall,F1
-0.5555555555555556,0.8333333333333334,0.6666666666666666
+Precision,Recall,F1,ROC
+numpy.matrix['precision'],numpy.matrix['recall'],numpy.matrix['f1'],0.8611111111111112

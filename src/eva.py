@@ -1,3 +1,4 @@
+from numpy.matrixlib.defmatrix import matrix
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import roc_curve, roc_auc_score
 import matplotlib.pyplot as plt
@@ -24,11 +25,13 @@ def evaluate_classification(model, test_loader, device):
     precision = precision_score(y_true, y_pred, zero_division=0)
     recall_v = recall_score(y_true, y_pred, zero_division=0)
     f1 = f1_score(y_true, y_pred, zero_division=0)
-
+    metrics = {
+        "precision": precision,
+        "recall": recall_v,
+        "f1": f1
+    }
     print(f'Precision: {precision:.2f}, Recall: {recall_v:.2f}, F1: {f1:.2f}')
-    df = pd.DataFrame([{'Precision': precision, 'Recall': recall_v, 'F1': f1}])
-    df.to_csv('result/precision_recall_f1_score.csv', index=False)
-    return y_true, probs
+    return y_true, probs, metrics
 
 
 def plot_roc(y_true, probs):
@@ -70,10 +73,15 @@ def main():
         print('Warning: could not load model weights from result/model.pt:', e)
         print('Proceeding with randomly initialized model for evaluation.')
 
-    y_true, probs = evaluate_classification(model, test_loader, device)
+    y_true, probs, metrics = evaluate_classification(model, test_loader, device)
 
     plot_roc(y_true, probs)
 
+    precision = matrix['precision']
+    recall = matrix['recall']
+    f1 = matrix['f1']
+    df = pd.DataFrame([{'Precision': precision, 'Recall': recall, 'F1': f1, 'ROC': roc_auc_score(y_true, probs)}])
+    df.to_csv('result/precision_recall_f1_score.csv', index=False)
 
 if __name__ == '__main__':
     main()
