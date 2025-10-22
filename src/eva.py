@@ -3,6 +3,7 @@ from sklearn.metrics import roc_curve, roc_auc_score
 import matplotlib.pyplot as plt
 import torch
 from modeling import load_data, CNN
+import pandas as pd
 
 def evaluate_classification(model, test_loader, device):
     model.eval()
@@ -25,7 +26,8 @@ def evaluate_classification(model, test_loader, device):
     f1 = f1_score(y_true, y_pred, zero_division=0)
 
     print(f'Precision: {precision:.2f}, Recall: {recall_v:.2f}, F1: {f1:.2f}')
-
+    df = pd.DataFrame([{'Precision': precision, 'Recall': recall_v, 'F1': f1}])
+    df.to_csv('result/precision_recall_f1_score.csv', index=False)
     return y_true, probs
 
 
