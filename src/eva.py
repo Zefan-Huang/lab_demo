@@ -25,6 +25,7 @@ def evaluate_classification(model, test_loader, device):
     precision = precision_score(y_true, y_pred, zero_division=0)
     recall_v = recall_score(y_true, y_pred, zero_division=0)
     f1 = f1_score(y_true, y_pred, zero_division=0)
+
     metrics = {
         "precision": precision,
         "recall": recall_v,
