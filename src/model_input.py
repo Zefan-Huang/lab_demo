@@ -22,6 +22,7 @@ def split_data(df, train_ratio):
 def making_label(df, window, threshold):
     x_list = []
     y_list = []
+    g_list = []
     for pid, col in df.groupby('fitmri_id'):
         group = col
         value = group['total_steps_normalized'].values
@@ -41,6 +42,7 @@ def making_label(df, window, threshold):
                 label = 0
             x_list.append(past)
             y_list.append(label)
+            g_list.append(pid)
     x = np.array(x_list)
     y = np.array(y_list)
     return x, y
