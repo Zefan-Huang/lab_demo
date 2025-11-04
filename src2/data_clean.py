@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-from fontTools.subset import subset
-
 
 def load_data():
     df = pd.read_csv('data/daily_fitbit_sema_df_unprocessed.csv')
@@ -40,8 +38,12 @@ def fill_na(df_clean):
         df_clean.loc[df_clean['id'] == id, 'steps'] = sub_df['steps'].fillna(mean_sub).round(2)
     return df_clean
 
+def add_label(df_clean):
+    df_clean['label'] = 1
+    return df_clean
+
 def save_data(df_clean):
-    df_clean.to_csv('output/cleaned_data.csv', index=False)
+    df_clean.to_csv('unsupervised/cleaned_data.csv', index=False)
     print('Data saved')
 
 def main():
@@ -50,6 +52,7 @@ def main():
     save_id = sort_by_dates(summary)
     df_c = clean_data(df, save_id)
     df_c = fill_na(df_c)
+    df_c = add_label(df_c)
     save_data(df_c)
 
 if __name__ == '__main__':
