@@ -93,10 +93,10 @@ def unsupervised_analysis(summary, n_cluaster, random_state):
 def plot(summary):
     plt.figure(figsize=(8, 6))
     sns.scatterplot(
-        x='pca1', y='pca2', hue='cluster',
-        data=summary, palette='tab10', s=60, alpha=0.8
+        x='pca1', y='pca2', hue='cluster', style='label',
+        data=summary, palette='tab10', s=80, alpha=0.8
     )
-    plt.title('KMeans Clusters (PCA projection)')
+    plt.title('KMeans Clusters')
     plt.xlabel('PCA 1')
     plt.ylabel('PCA 2')
     plt.legend(title='Cluster')
@@ -106,7 +106,8 @@ def plot(summary):
     print("plot saved")
 
 def save_summary(summary, ):
-    summary = pd.DataFrame(summary)
+    summary.to_csv('unsupervised/feed.csv', index=False)
+    print('summary saved')
 
 def main():
     df_ms, df_h = load_data()
