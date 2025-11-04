@@ -11,6 +11,8 @@ def drop_columns(df):
 
 def add_label(df):
     df['label'] = 0
+    df = df.rename(columns={'fitmri_id': 'id'})
+    df = df.rename(columns={'total_steps': 'steps'})
     print(df.head())
     return df
 
