@@ -38,9 +38,8 @@ def extract_features(df):
         days = np.arange(len(x))
         slope = linregress(days, x).slope if len(x) > 1 else 0.0
         trend_val = slope
-
-        # Use a scalar for label (first value within the group)
-        label_val = sub['label'].iloc[0] if 'label' in sub.columns and len(sub['label']) > 0 else np.nan
+        #pick the label from each id
+        label_val = sub['label'].iloc[0]
 
         features.append({'id': id,
                          'mean': mean_val,
