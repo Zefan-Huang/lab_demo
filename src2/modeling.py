@@ -100,7 +100,7 @@ def plot(summary):
     plt.legend(title='Cluster')
     plt.tight_layout()
 
-    plt.savefig('unsupervised/eg:unsupervised_cluster_lpot.png', dpi=500, bbox_inches='tight')
+    plt.savefig('unsupervised/unsupervised_cluster_lpot.png', dpi=500, bbox_inches='tight')
     print("plot saved")
 
 def save_summary(summary, crosstab, centers):

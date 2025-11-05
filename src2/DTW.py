@@ -96,7 +96,7 @@ def plot_clusters(df_out, title="DTW Clustering"):
     plt.ylabel('Steps (standardized)')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('unsupervised/eg:unsupervised_DTW.png', dpi=500, bbox_inches='tight')
+    plt.savefig('unsupervised/unsupervised_DTW.png', dpi=500, bbox_inches='tight')
     plt.show()
 
 
