@@ -27,13 +27,11 @@ def extract_features(df):
         x = sub['steps'].values
         mean_val = np.mean(x)
         std_val = np.std(x)
-        # Safely compute ACF at lag up to 7; handle short series
-        if len(x) > 1:
-            nlags = min(7, len(x) - 1)
-            acf_vals = acf(x, nlags=nlags, fft=False)
-            acf_val = acf_vals[nlags]
-        else:
-            acf_val = np.nan
+
+        nlags = min(7, len(x) - 1)
+        acf_vals = acf(x, nlags=nlags, fft=False)
+        acf_val = acf_vals[nlags]
+
         low_ratio_val = np.mean(x < 0.3 * mean_val)
         high_ratio_val = np.mean(x > 1.7 * mean_val)
 
@@ -65,7 +63,6 @@ def unsupervised_analysis(summary, n_cluaster, random_state):
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Specify n_init to avoid warnings across sklearn versions
     kmeans = KMeans(n_clusters=n_cluaster, random_state=random_state, n_init='auto')
     summary['cluster'] = kmeans.fit_predict(X_scaled)
 
@@ -78,7 +75,8 @@ def unsupervised_analysis(summary, n_cluaster, random_state):
 
     ## MS vs Health
     crosstab = pd.crosstab(summary['cluster'].astype(str), summary['label'].astype(str), normalize='index')
-    print(f"the ratio of clusters is: {crosstab}")
+    print("the ratio of clusters is:")
+    print(crosstab)
 
     #PCA
     pca = PCA(n_components=2)
@@ -87,8 +85,8 @@ def unsupervised_analysis(summary, n_cluaster, random_state):
     summary['pca2'] = pca_result[:, 1]
 
     score = silhouette_score(X_scaled, summary['cluster'])
-    print(f"\n Silhouette Score: {score:.3f}")
-    return summary
+    print(f"Silhouette Score: {score:.3f}")
+    return summary, crosstab, centers
 
 def plot(summary):
     plt.figure(figsize=(8, 6))
@@ -105,17 +103,21 @@ def plot(summary):
     plt.savefig('unsupervised/cluster_lpot.png', dpi=500, bbox_inches='tight')
     print("plot saved")
 
-def save_summary(summary, ):
+def save_summary(summary, crosstab, centers):
     summary.to_csv('unsupervised/feed.csv', index=False)
     print('summary saved')
+    crosstab.to_csv('unsupervised/output/crosstab.csv', index=False)
+    print('crosstab saved')
+    centers.to_csv('unsupervised/output/centers.csv', index=False)
+    print('centers saved')
 
 def main():
     df_ms, df_h = load_data()
     df = combine_data(df_ms, df_h)
     summary = extract_features(df)
-    summary = unsupervised_analysis(summary, 3, 42)
+    summary, crosstab, centers = unsupervised_analysis(summary, 3, 42)
     plot(summary)
-    save_summary(summary)
+    save_summary(summary, crosstab, centers)
 
 if __name__ == '__main__':
     main()

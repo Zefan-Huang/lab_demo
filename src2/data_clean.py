@@ -18,7 +18,7 @@ def check_dates(df):
     return summary
 
 def sort_by_dates(summary):
-    top_20 = summary.query("num_days >= 12").nlargest(20, 'num_days').reset_index(drop=True)
+    top_20 = summary.query("num_days >= 12").nlargest(30, 'num_days').reset_index(drop=True)
     print("Here's the top 20 patients:")
     print(top_20)
     return top_20

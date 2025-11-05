@@ -16,6 +16,11 @@ def add_label(df):
     print(df.head())
     return df
 
+def check_data(df):
+    summary = df.groupby('id')['steps'].nunique().reset_index(name = 'number of days')
+    print('this is summary:')
+    print(summary)
+
 def save(df):
     df.to_csv('unsupervised/cleaned_MS_data.csv', index=False)
     print("MS data Saved")
@@ -24,6 +29,7 @@ def main():
     df = load_data()
     df = drop_columns(df)
     df = add_label(df)
+    check_data(df)
     save(df)
 
 if __name__ == "__main__":
