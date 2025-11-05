@@ -96,12 +96,12 @@ def plot_clusters(df_out, title="DTW Clustering"):
     plt.ylabel('Steps (standardized)')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('unsupervised/DTW.png', dpi=500, bbox_inches='tight')
+    plt.savefig('unsupervised/eg:unsupervised_DTW.png', dpi=500, bbox_inches='tight')
     plt.show()
 
 
 def save(df_out):
-    df_out.to_csv('unsupervised/cleaned_data.csv', index=False)
+    df_out.to_csv('unsupervised/dtw.csv', index=False)
     print('Data saved')
 
 
