@@ -39,7 +39,7 @@ def data_preprocessing(dfo, target_len):
     for pid, sub in df.groupby('id'):
         x = sub['steps'].astype(float).values
         x = x[:target_len]
-        label = sub['label'].iloc[0] if 'label' in sub.columns and len(sub['label']) > 0 else np.nan
+        label = sub['label'].iloc[0]
         all_series.append({'id': pid, 'x': x, 'label': label})
 
     df_out = pd.DataFrame(all_series)
