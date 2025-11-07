@@ -77,6 +77,12 @@ def train_eval_loop(x, y, groups, epochs, lr = 1e-3):
         all_y_prob.extend(pred.tolist())
         all_y_pred.extend(pred_label.tolist())
 
+        aucs = [r[1] for r in result if not np.isnan(r[1])]
+        mean_auc = np.mean(aucs) if aucs else np.nan
+        mean_f1 = np.mean([r[2] for r in result])
+        mean_precision = np.mean([r[3] for r in result])
+        mean_recall = np.mean([r[4] for r in result])
+
         try:
             global_auc = roc_auc_score(all_y_true, all_y_prob)
         except Exception:
@@ -88,12 +94,51 @@ def train_eval_loop(x, y, groups, epochs, lr = 1e-3):
 
     print(f"Global AUC across all folds: {global_auc:.3f}")
     print(f"AUC={global_auc:.3f}, F1={global_f1:.3f}, "f"Precision={global_precision:.3f}, Recall={global_recall:.3f}")
+    df_pred = pd.DataFrame({
+        "y_true": all_y_true,
+        "y_prob": all_y_prob
+    })
+    df_pred.to_csv("result/global_predictions.csv", index=False)
+
+    result = { "fold_results": result,
+    "fold_mean": {
+        "auc": mean_auc,
+        "f1": mean_f1,
+        "precision": mean_precision,
+        "recall": mean_recall
+    },
+    "global": {
+        "auc": global_auc,
+        "f1": global_f1,
+        "precision": global_precision,
+        "recall": global_recall}
+    }
     return result
 
 def save_data(result):
-    df = pd.DataFrame(result)
-    df.to_csv('result/super_cv20_metrics.csv')
-    print("saved to result/super_cv20_metrics.csv")
+    fold_results = result["fold_results"]
+    df_folds = pd.DataFrame(fold_results, columns=["fold", "auc", "f1", "precision", "recall"])
+    df_folds.to_csv("result/super_cv20_fold_metrics.csv", index=False)
+
+    summary = {
+        "metric": ["AUC", "F1", "Precision", "Recall"],
+        "fold_mean": [
+            result["fold_mean"]["auc"],
+            result["fold_mean"]["f1"],
+            result["fold_mean"]["precision"],
+            result["fold_mean"]["recall"],
+        ],
+        "global": [
+            result["global"]["auc"],
+            result["global"]["f1"],
+            result["global"]["precision"],
+            result["global"]["recall"],
+        ],
+    }
+    df_summary = pd.DataFrame(summary)
+    df_summary.to_csv("result/super_cv20_summary.csv", index=False)
+    print('Saved')
+
 
 def main():
     df_features = pd.read_csv('unsupervised/features.csv')
