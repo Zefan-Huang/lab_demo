@@ -115,7 +115,7 @@ def train_eval_loop(x, y, groups, epochs, lr = 1e-3):
     }
     return result
 
-def save_data(result):
+def save_data(result, loc):
     fold_results = result["fold_results"]
     df_folds = pd.DataFrame(fold_results, columns=["fold", "auc", "f1", "precision", "recall"])
     df_folds.to_csv("result/super_cv20_fold_metrics.csv", index=False)
@@ -136,9 +136,8 @@ def save_data(result):
         ],
     }
     df_summary = pd.DataFrame(summary)
-    df_summary.to_csv("result/super_cv20_summary.csv", index=False)
+    df_summary.to_csv(loc, index=False)
     print('Saved')
-
 
 def main():
     df_features = pd.read_csv('unsupervised/features.csv')
@@ -147,7 +146,7 @@ def main():
     groups = df_features['id'].values
     x = x[:, np.newaxis, :]
     results = train_eval_loop(x, y, groups, epochs = 30)
-    save_data(results)
+    save_data(results, loc = "result2/super_cv20_summary_win14.csv")
 
 if __name__ == '__main__':
     main()
